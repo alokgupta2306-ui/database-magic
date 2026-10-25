@@ -1,0 +1,65 @@
+# Start Docker Desktop first and wait until it says running. No username or password for HBase.
+# In Command Prompt, FIRST TIME ONLY (creates the container):
+# docker run -d --name hbase -p 2181:2181 -p 16010:16010 -p 9090:9090 harisekhon/hbase
+# If the container already exists, start it instead:  docker start hbase
+# Check it is running:  docker ps
+# Open the HBase shell:  docker exec -it hbase hbase shell
+# Then run the commands below inside the HBase shell
+
+create_namespace 'college'
+list_namespace
+alter_namespace 'college', {METHOD => 'set', 'PROPERTY_NAME' => 'college'}
+create 'college:students', 'info', 'academic'
+list
+put 'college:students', '1', 'info:name', 'Pranay'
+put 'college:students', '1', 'info:gender', 'Male'
+put 'college:students', '1', 'academic:course', 'MScCS'
+put 'college:students', '1', 'academic:marks', '85'
+put 'college:students', '2', 'info:name', 'Riya'
+put 'college:students', '2', 'info:gender', 'Female'
+put 'college:students', '2', 'academic:course', 'BScIT'
+put 'college:students', '2', 'academic:marks', '78'
+put 'college:students', '3', 'info:name', 'Amit'
+put 'college:students', '3', 'info:gender', 'Male'
+put 'college:students', '3', 'academic:course', 'BScCS'
+put 'college:students', '3', 'academic:marks', '82'
+put 'college:students', '4', 'info:name', 'Sneha'
+put 'college:students', '4', 'info:gender', 'Female'
+put 'college:students', '4', 'academic:course', 'MScIT'
+put 'college:students', '4', 'academic:marks', '88'
+put 'college:students', '5', 'info:name', 'Rohit'
+put 'college:students', '5', 'info:gender', 'Male'
+put 'college:students', '5', 'academic:course', 'BCom'
+put 'college:students', '5', 'academic:marks', '75'
+put 'college:students', '6', 'info:name', 'Kiran'
+put 'college:students', '6', 'info:gender', 'Female'
+put 'college:students', '6', 'academic:course', 'MCA'
+put 'college:students', '6', 'academic:marks', '90'
+put 'college:students', '7', 'info:name', 'Nikhil'
+put 'college:students', '7', 'info:gender', 'Male'
+put 'college:students', '7', 'academic:course', 'MBA'
+put 'college:students', '7', 'academic:marks', '80'
+put 'college:students', '8', 'info:name', 'Pooja'
+put 'college:students', '8', 'info:gender', 'Female'
+put 'college:students', '8', 'academic:course', 'MScCS'
+put 'college:students', '8', 'academic:marks', '92'
+put 'college:students', '9', 'info:name', 'Raj'
+put 'college:students', '9', 'info:gender', 'Male'
+put 'college:students', '9', 'academic:course', 'BScIT'
+put 'college:students', '9', 'academic:marks', '70'
+put 'college:students', '10', 'info:name', 'Asha'
+put 'college:students', '10', 'info:gender', 'Female'
+put 'college:students', '10', 'academic:course', 'MCom'
+put 'college:students', '10', 'academic:marks', '88'
+scan 'college:students'
+get 'college:students', '3'
+get 'college:students', '3', 'academic:course'
+put 'college:students', '3', 'academic:marks', '89'
+delete 'college:students', '5', 'academic:marks'
+deleteall 'college:students', '5'
+alter 'college:students', 'personal'
+describe 'college:students'
+alter 'college:students', {NAME => 'personal', METHOD => 'delete'}
+disable 'college:students'
+drop 'college:students'
+exit
