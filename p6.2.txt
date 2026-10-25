@@ -1,0 +1,48 @@
+# Start Docker Desktop first and wait until it says running. No username or password for Cassandra.
+# In PowerShell as Administrator, FIRST TIME ONLY (creates the container):
+# docker run -d --name cassandra -p 9042:9042 cassandra
+# If the container already exists, start it instead:  docker start cassandra
+# WAIT 1-2 minutes after starting, Cassandra is slow to boot.
+# Check it is running:  docker ps
+# Open the Cassandra shell:  docker exec -it cassandra cqlsh
+# (if it says connection refused, wait a bit and run it again)
+# Then run the commands below inside cqlsh
+
+CREATE KEYSPACE mydb WITH replication = {'class':'SimpleStrategy', 'replication_factor':1};
+USE mydb;
+CREATE TABLE students ( id int PRIMARY KEY, name text, age int, grade text, city text );
+// ---- INSERTS BELOW ARE ADDED BY ME, not in your practical. Without them the table is empty. ----
+INSERT INTO students (id, name, age, grade, city) VALUES (1, 'Rohan', 21, 'A', 'Mumbai');
+INSERT INTO students (id, name, age, grade, city) VALUES (2, 'Neha', 22, 'B', 'Pune');
+INSERT INTO students (id, name, age, grade, city) VALUES (3, 'Amit', 23, 'A', 'Delhi');
+INSERT INTO students (id, name, age, grade, city) VALUES (4, 'Sneha', 21, 'C', 'Nashik');
+INSERT INTO students (id, name, age, grade, city) VALUES (5, 'Rahul', 24, 'B', 'Mumbai');
+INSERT INTO students (id, name, age, grade, city) VALUES (6, 'Priya', 22, 'A', 'Chennai');
+INSERT INTO students (id, name, age, grade, city) VALUES (7, 'Kiran', 23, 'B', 'Nagpur');
+INSERT INTO students (id, name, age, grade, city) VALUES (8, 'Pooja', 21, 'C', 'Surat');
+INSERT INTO students (id, name, age, grade, city) VALUES (9, 'Vikas', 25, 'A', 'Jaipur');
+INSERT INTO students (id, name, age, grade, city) VALUES (10, 'Asha', 22, 'B', 'Kolkata');
+// ---- END OF ADDED INSERTS ----
+SELECT * FROM students;
+SELECT name, grade FROM students;
+SELECT * FROM students WHERE id = 3;
+SELECT * FROM students WHERE grade = 'A' ALLOW FILTERING;
+UPDATE students SET city = 'Bangalore' WHERE id = 2;
+DELETE city FROM students WHERE id = 8;
+DELETE FROM students WHERE id = 4;
+SELECT COUNT(*) FROM students;
+ALTER TABLE students ADD email text;
+ALTER TABLE students DROP email;
+TRUNCATE students;
+DROP TABLE students;
+DROP KEYSPACE mydb;
+exit;
+
+# OPTIONAL (inside cqlsh, run before dropping the keyspace):
+# DESCRIBE KEYSPACES;
+# USE mydb;
+# DESCRIBE TABLES;
+# DESCRIBE TABLE students;
+# OPTIONAL (in PowerShell, to stop and remove the container):
+# docker stop cassandra
+# docker rm cassandra
