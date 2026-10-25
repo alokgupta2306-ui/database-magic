@@ -1,0 +1,17 @@
+# Open Command Prompt inside C:\basex\bin (type cmd in the folder path bar)
+# Run: basex.bat    (no username or password needed)
+# Then run the commands below inside BaseX
+
+CREATE DB students <students><student id="1"><name>Mohan</name><age>23</age></student><student id="2"><name>Akash</name><age>22</age></student><student id="3"><name>Rohan</name><age>24</age></student><student id="4"><name>Meena</name><age>21</age></student><student id="5"><name>Sneha</name><age>25</age></student><student id="6"><name>Vikas</name><age>25</age></student><student id="7"><name>Anjali</name><age>22</age></student><student id="8"><name>Rahul</name><age>24</age></student><student id="9"><name>Neha</name><age>23</age></student><student id="10"><name>Kiran</name><age>26</age></student></students>
+OPEN students
+XQUERY /students
+XQUERY insert node <student id="11"><name>Arjun</name><age>20</age></student> into /students
+XQUERY /students
+XQUERY replace value of node /students/student[@id="5"]/age with "24"
+XQUERY /students/student[@id="5"]
+XQUERY delete node /students/student[@id="3"]
+XQUERY /students
+XQUERY /students/student/name
+XQUERY /students/student[age > 23]
+XQUERY count(/students/student)
+CLOSE
