@@ -1,0 +1,37 @@
+# ===== PART 1: UBUNTU (WSL) =====
+# FIRST TIME ONLY (PowerShell as Administrator): wsl --install   then restart the PC
+# Check WSL (PowerShell):  wsl --list --verbose
+# If Stopped, start it (PowerShell):  wsl -d Ubuntu
+# Then run these inside Ubuntu:
+sudo apt update
+sudo apt upgrade -y
+sudo apt install -y postgresql postgis
+sudo service postgresql start
+sudo service postgresql status
+sudo -u postgres psql
+
+# ===== PART 2: INSIDE psql AS postgres (postgres=#) =====
+CREATE USER gisuser WITH PASSWORD 'gis_pass';
+CREATE DATABASE gisdb OWNER gisuser;
+\c gisdb
+CREATE EXTENSION postgis;
+SELECT PostGIS_Full_Version();
+\q
+
+# ===== PART 3: LOGIN AS gisuser (in Ubuntu) =====
+# Username: gisuser   Password: gis_pass
+psql -U gisuser -d gisdb -h localhost
+# ONLY IF you get an authentication error, fix this, then restart and login again:
+# sudo nano /etc/postgresql/16/main/pg_hba.conf
+# sudo service postgresql restart
+
+# ===== PART 4: QUERIES (inside psql as gisuser) =====
+CREATE TABLE places ( id SERIAL PRIMARY KEY, name TEXT, geom GEOMETRY(Point, 4326) );
+INSERT INTO places (name, geom) VALUES ('Mumbai', ST_GeomFromText('POINT(72.8777 19.0760)', 4326)), ('Delhi', ST_GeomFromText('POINT(77.1025 28.7041)', 4326)), ('Bengaluru', ST_GeomFromText('POINT(77.5946 12.9716)', 4326)), ('Hyderabad', ST_GeomFromText('POINT(78.4867 17.3850)', 4326)), ('Chennai', ST_GeomFromText('POINT(80.2707 13.0827)', 4326)), ('Pune', ST_GeomFromText('POINT(73.8567 18.5204)', 4326)), ('Kolkata', ST_GeomFromText('POINT(88.3639 22.5726)', 4326)), ('Ahmedabad', ST_GeomFromText('POINT(72.5714 23.0225)', 4326)), ('Jaipur', ST_GeomFromText('POINT(75.7873 26.9124)', 4326)), ('Lucknow', ST_GeomFromText('POINT(80.9462 26.8467)', 4326));
+SELECT * FROM places;
+SELECT p1.name AS city1, p2.name AS city2, ST_Distance(p1.geom::geography, p2.geom::geography) AS distance_meters FROM places p1, places p2 WHERE p1.name = 'Mumbai' AND p2.name = 'Pune';
+SELECT name, ST_Distance( geom::geography, ST_SetSRID(ST_MakePoint(72.8777, 19.0760),4326)::geography ) /1000 AS distance_km FROM places;
+SELECT name FROM places WHERE ST_DWithin( geom::geography, ST_SetSRID(ST_MakePoint(72.8777,19.0760),4326)::geography, 100000 );
+SELECT name FROM places WHERE ST_Intersects( geom, ST_GeomFromText( 'POLYGON((73.5 18.3, 74.2 18.3, 74.2 19.0, 73.5 19.0, 73.5 18.3))', 4326 ) );
+SELECT name FROM places WHERE ST_DWithin( geom::geography, ST_GeogFromText('SRID=4326;POINT(72.8777 19.0760)'), 300000 );
+SELECT name, ST_Distance(geom::geography, ST_GeogFromText('SRID=4326;POINT(72.8777 19.0760)')) AS dist FROM places ORDER BY dist ASC LIMIT 1;
