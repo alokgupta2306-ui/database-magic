@@ -1,0 +1,23 @@
+-- Run in Command Prompt:  psql -U postgres
+-- Username: postgres
+-- Password: admin123
+-- Then run the commands below inside psql
+
+CREATE DATABASE labdb;
+\c labdb
+CREATE TYPE Person AS ( first_name TEXT, last_name TEXT, age INT );
+CREATE OR REPLACE FUNCTION get_full_name(p Person) RETURNS TEXT AS $$ BEGIN RETURN p.first_name || ' ' || p.last_name; END; $$ LANGUAGE plpgsql;
+CREATE TABLE students ( id SERIAL PRIMARY KEY, info Person );
+INSERT INTO students (info) VALUES (ROW('Rohit', 'Sharma', 23)), (ROW('Amit', 'Sharma', 22)), (ROW('Riya', 'Patel', 21)), (ROW('Sneha', 'Joshi', 25)), (ROW('Rahul', 'Kumar', 24)), (ROW('Ananya', 'Mehta', 22)), (ROW('Aditya', 'Gupta', 23)), (ROW('Tanya', 'Rao', 21)), (ROW('Karan', 'Singh', 24)), (ROW('Isha', 'Shah', 22));
+SELECT * FROM students s;
+SELECT s.id, (s.info).first_name, (s.info).age FROM students s;
+SELECT s.id, get_full_name(s.info) AS full_name FROM students s;
+SELECT get_full_name(s.info), (s.info).age FROM students s WHERE (s.info).age > 23;
+UPDATE students SET info = ROW((info).first_name, (info).last_name, 26) WHERE (info).first_name = 'Sneha';
+UPDATE students SET info = ROW((info).first_name, (info).last_name, (info).age + 1) WHERE (info).age < 23;
+DELETE FROM students WHERE (info).first_name = 'Riya';
+DELETE FROM students WHERE (info).age < 22;
+SELECT get_full_name(s.info), (s.info).age FROM students s ORDER BY (s.info).age DESC;
+SELECT COUNT(*) FROM students WHERE (info).age > 23;
+SELECT get_full_name(s.info) FROM students s WHERE (s.info).last_name LIKE 'Sh%';
+SELECT get_full_name(s.info), (s.info).age FROM students s ORDER BY (s.info).age LIMIT 5;
