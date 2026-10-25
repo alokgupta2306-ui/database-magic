@@ -1,0 +1,39 @@
+# FIRST TIME ONLY (PowerShell as Administrator): wsl --install   then restart the PC
+# Set Ubuntu username: admin (or admin1)   Password: admin123
+# FIRST TIME ONLY (inside Ubuntu): sudo apt update
+# FIRST TIME ONLY (inside Ubuntu): sudo apt upgrade -y
+# FIRST TIME ONLY (inside Ubuntu): sudo apt install redis-server -y
+#
+# EVERY TIME:
+# 1. PowerShell as Administrator, check WSL:  wsl --list --verbose
+# 2. If Stopped, start it:  wsl -d Ubuntu
+# 3. Inside Ubuntu (sudo password: admin123):  sudo service redis-server start
+# 4. Inside Ubuntu:  redis-cli
+# 5. Then run the commands below inside redis-cli
+
+ping
+SELECT 1
+SET student:1 '{"name":"Mohan","age":20,"course":"CS"}'
+SET student:2 '{"name":"Neha","age":21,"course":"IT"}'
+SET student:3 '{"name":"Rahul","age":22,"course":"CS"}'
+SET student:4 '{"name":"Sita","age":20,"course":"IT"}'
+SET student:5 '{"name":"Amit","age":23,"course":"CS"}'
+SET student:6 '{"name":"Priya","age":21,"course":"IT"}'
+SET student:7 '{"name":"Rohan","age":22,"course":"CS"}'
+SET student:8 '{"name":"Anita","age":23,"course":"IT"}'
+SET student:9 '{"name":"Vikas","age":24,"course":"CS"}'
+SET student:10 '{"name":"Tina","age":22,"course":"IT"}'
+GET student:1
+GET student:5
+SET student:3 '{"name":"Rahul","age":23,"course":"CS"}'
+GET student:3
+DEL student:7
+KEYS *
+FLUSHDB
+FLUSHALL
+
+# OPTIONAL (run in Ubuntu, not in redis-cli):
+# sudo service redis-server stop
+# sudo service redis-server restart
+# sudo service redis-server status
+# More databases: sudo nano /etc/redis/redis.conf  -> set  databases 32  -> Ctrl+O, Enter, Ctrl+X -> restart redis
