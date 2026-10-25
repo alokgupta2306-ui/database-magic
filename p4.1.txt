@@ -1,0 +1,21 @@
+// Open PowerShell as administrator and run:  mongosh
+// No username or password needed
+// Then run the commands below inside mongosh
+
+use mycollege
+db
+db.createCollection("students")
+db.students.insertMany([ { roll: 1, name: "Rohan", age: 23, course: "MSc CS" }, { roll: 2, name: "Shravani", age: 22, course: "BSc IT" }, { roll: 3, name: "Meera", age: 24, course: "MCA" }, { roll: 4, name: "Amit", age: 21, course: "BSc CS" }, { roll: 5, name: "Neha", age: 25, course: "MBA" }, { roll: 6, name: "Rohit", age: 23, course: "MSc Math" }, { roll: 7, name: "Pooja", age: 22, course: "MCom" }, { roll: 8, name: "Kiran", age: 24, course: "MSc CS" }, { roll: 9, name: "Sahil", age: 21, course: "BCA" }, { roll: 10, name: "Anjali", age: 23, course: "BSc IT" } ]);
+show dbs
+show collections
+db.students.find()
+db.students.find().pretty()
+db.students.find({ age: { $gt: 22 } })
+db.students.updateOne( { roll: 1 }, { $set: { course: "AI & ML" } } )
+db.students.updateMany( { age: 22 }, { $set: { course: "Data Science" } } )
+db.students.deleteOne({ roll: 10 })
+db.students.deleteMany({ age: { $lt: 23 } })
+db.students.findOne()
+db.students.updateMany( {}, { $set: { grade: "Pending" } } )
+db.students.drop()
+db.dropDatabase()
