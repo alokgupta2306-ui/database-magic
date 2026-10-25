@@ -1,0 +1,19 @@
+# Start Docker Desktop first and wait until it says running. No username or password for MongoDB.
+# In PowerShell as Administrator, FIRST TIME ONLY (creates the container):
+# docker run -d --name mongoDB -p 27017:27017 mongo
+# If the container already exists, start it instead:  docker start mongoDB
+# Check it is running:  docker ps
+# Open the MongoDB shell:  docker exec -it mongoDB mongosh
+# Then run the commands below inside mongosh
+
+use companyDB
+db.employees.insertMany([ { emp_id: 101, name: "Aarav", age: 25, department: "IT", salary: 60000 }, { emp_id: 102, name: "Simran", age: 30, department: "HR", salary: 55000 }, { emp_id: 103, name: "Karan", age: 28, department: "Finance", salary: 65000 }, { emp_id: 104, name: "Riya", age: 26, department: "IT", salary: 70000 }, { emp_id: 105, name: "Vikram", age: 35, department: "Admin", salary: 50000 }, { emp_id: 106, name: "Neha", age: 27, department: "Finance", salary: 72000 }, { emp_id: 107, name: "Raj", age: 24, department: "IT", salary: 61000 }, { emp_id: 108, name: "Anjali", age: 29, department: "HR", salary: 58000 }, { emp_id: 109, name: "Pratik", age: 31, department: "Finance", salary: 67000 }, { emp_id: 110, name: "Meera", age: 33, department: "Admin", salary: 53000 } ])
+db.employees.find().pretty()
+db.employees.createIndex({ salary: 1 })
+db.employees.getIndexes()
+db.employees.find().sort({ salary: 1 })
+db.employees.find().sort({ salary: -1 })
+db.employees.createIndex({ department: 1, salary: -1 })
+db.employees.getIndexes()
+db.employees.find({ department: "IT" }).sort({ salary: -1 })
+db.employees.dropIndex("salary_1")
