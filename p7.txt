@@ -1,0 +1,11 @@
+// Open PowerShell and run:  mongosh
+// No username or password needed
+// Then run the commands below inside mongosh
+
+use surveyDB
+db.respondents.insertMany([ { name: "Aarav", gender: "M", city: "Mumbai" }, { name: "Simran", gender: "F", city: "Delhi" }, { name: "Rohit", gender: "M", city: "Delhi" }, { name: "Neha", gender: "F", city: "Pune" }, { name: "Kiran", gender: "M", city: "Pune" }, { name: "Pooja", gender: "F", city: "Mumbai" }, { name: "Rahul", gender: "M", city: "Mumbai" }, { name: "Aisha", gender: "F", city: "Mumbai" }, { name: "Vikas", gender: "M", city: "Delhi" }, { name: "Meena", gender: "F", city: "Delhi" }, { name: "Suresh", gender: "M", city: "Pune" }, { name: "Sneha", gender: "F", city: "Pune" }, { name: "Aditya", gender: "M", city: "Nagpur" }, { name: "Priya", gender: "F", city: "Nagpur" }, { name: "Manoj", gender: "M", city: "Pune" }, { name: "Riya", gender: "F", city: "Delhi" }, { name: "Amit", gender: "M", city: "Mumbai" }, { name: "Shreya", gender: "F", city: "Pune" } ])
+db.respondents.find().limit(5).pretty()
+var mapFunction = function() { emit({ city: this.city, gender: this.gender }, 1); };
+var reduceFunction = function(key, values) { return Array.sum(values); };
+db.respondents.mapReduce( mapFunction, reduceFunction, { out: "city_gender_count" } )
+db.city_gender_count.find().pretty()
